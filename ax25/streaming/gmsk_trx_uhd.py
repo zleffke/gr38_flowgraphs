@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: VCC Simple Transceiver, CERES_30CF9D2_2022-04-24T05:15:20.450663Z_250k.fc32
+# Title: VCC Simple Transceiver, CERES_30CF9D2_2022-04-25T20:17:54.656765Z_250k.fc32
 # Author: Zach Leffke, KJ4QLP
 # Description: Development transmitter or testing Lithium Radio
 # GNU Radio version: 3.8.5.0-rc1
@@ -46,12 +46,12 @@ from gnuradio.qtgui import Range, RangeWidget
 
 from gnuradio import qtgui
 
-class fsk_trx_uhd(gr.top_block, Qt.QWidget):
+class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
 
     def __init__(self, radio_id='30CF9D2', rf_freq=401.12e6, rx_offset=250e3, sat_name='CERES', tx_offset=250e3):
-        gr.top_block.__init__(self, "VCC Simple Transceiver, CERES_30CF9D2_2022-04-24T05:15:20.450663Z_250k.fc32")
+        gr.top_block.__init__(self, "VCC Simple Transceiver, CERES_30CF9D2_2022-04-25T20:17:54.656765Z_250k.fc32")
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("VCC Simple Transceiver, CERES_30CF9D2_2022-04-24T05:15:20.450663Z_250k.fc32")
+        self.setWindowTitle("VCC Simple Transceiver, CERES_30CF9D2_2022-04-25T20:17:54.656765Z_250k.fc32")
         qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
@@ -69,7 +69,7 @@ class fsk_trx_uhd(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("GNU Radio", "fsk_trx_uhd")
+        self.settings = Qt.QSettings("GNU Radio", "gmsk_trx_uhd")
 
         try:
             if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
@@ -328,7 +328,7 @@ class fsk_trx_uhd(gr.top_block, Qt.QWidget):
 
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "fsk_trx_uhd")
+        self.settings = Qt.QSettings("GNU Radio", "gmsk_trx_uhd")
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
 
@@ -476,7 +476,7 @@ def argument_parser():
     return parser
 
 
-def main(top_block_cls=fsk_trx_uhd, options=None):
+def main(top_block_cls=gmsk_trx_uhd, options=None):
     if options is None:
         options = argument_parser().parse_args()
 
