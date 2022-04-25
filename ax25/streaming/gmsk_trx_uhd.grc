@@ -5,7 +5,7 @@ options:
     cmake_opt: ''
     comment: ''
     copyright: ''
-    description: Development transmitter or testing Lithium Radio
+    description: Half Duplex GMSK Ax.25 Transceiver, streaming processing
     gen_cmake: 'On'
     gen_linking: dynamic
     generate_options: qt_gui
@@ -21,7 +21,7 @@ options:
     run_options: prompt
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: '"VCC Simple Transceiver, " +  str(fn)'
+    title: GMSK, Ax.25, 9600, Streaming Mode
     window_size: 1600,2000
   states:
     bus_sink: false

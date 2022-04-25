@@ -5,9 +5,9 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: VCC Simple Transceiver, CERES_30CF9D2_2022-04-25T20:17:54.656765Z_250k.fc32
+# Title: GMSK, Ax.25, 9600, Streaming Mode
 # Author: Zach Leffke, KJ4QLP
-# Description: Development transmitter or testing Lithium Radio
+# Description: Half Duplex GMSK Ax.25 Transceiver, streaming processing
 # GNU Radio version: 3.8.5.0-rc1
 
 from distutils.version import StrictVersion
@@ -49,9 +49,9 @@ from gnuradio import qtgui
 class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
 
     def __init__(self, radio_id='30CF9D2', rf_freq=401.12e6, rx_offset=250e3, sat_name='CERES', tx_offset=250e3):
-        gr.top_block.__init__(self, "VCC Simple Transceiver, CERES_30CF9D2_2022-04-25T20:17:54.656765Z_250k.fc32")
+        gr.top_block.__init__(self, "GMSK, Ax.25, 9600, Streaming Mode")
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("VCC Simple Transceiver, CERES_30CF9D2_2022-04-25T20:17:54.656765Z_250k.fc32")
+        self.setWindowTitle("GMSK, Ax.25, 9600, Streaming Mode")
         qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
@@ -456,7 +456,7 @@ class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
 
 
 def argument_parser():
-    description = 'Development transmitter or testing Lithium Radio'
+    description = 'Half Duplex GMSK Ax.25 Transceiver, streaming processing'
     parser = ArgumentParser(description=description)
     parser.add_argument(
         "--radio-id", dest="radio_id", type=str, default='30CF9D2',
