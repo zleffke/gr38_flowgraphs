@@ -43,7 +43,7 @@ from gnuradio import qtgui
 
 class jove_dual_record_sigmf(gr.top_block, Qt.QWidget):
 
-    def __init__(self, ant_pol_x='N-S', ant_pol_y='E-W', ant_type='KJ4QLP Active HF Dipole Balun', db_type='LFRX', decim=5, geo_alt=655.0, geo_lat=37.206756, geo_lon=-80.418876, interp=1, path="/captures/wwv", samp_rate=1000e3, signal_type='JOVE', usrp_addr="addr=10.41.1.11", usrp_clock_source="Internal", usrp_subdev_spec='A:A A:B', usrp_sync="Unknown PPS", usrp_time_source="O/B GPSDO", usrp_type='N210'):
+    def __init__(self, ant_pol_x='N-S', ant_pol_y='E-W', ant_type='KJ4QLP Active HF Dipole Balun', db_type='LFRX', decim=5, geo_alt=655.0, geo_lat=37.206756, geo_lon=-80.418876, interp=1, path="/captures/wwv", samp_rate=12.5e6, signal_type='JOVE', usrp_addr="addr=10.41.1.11", usrp_clock_source="Internal", usrp_subdev_spec='A:A A:B', usrp_sync="Unknown PPS", usrp_time_source="O/B GPSDO", usrp_type='N210'):
         gr.top_block.__init__(self, "jove_dual_record_sigmf")
         Qt.QWidget.__init__(self)
         self.setWindowTitle("jove_dual_record_sigmf")
@@ -162,7 +162,7 @@ class jove_dual_record_sigmf(gr.top_block, Qt.QWidget):
             ),
         )
         self.uhd_usrp_source_0.set_subdev_spec(usrp_subdev_spec, 0)
-        self.uhd_usrp_source_0.set_time_source('gpsdo', 0)
+        self.uhd_usrp_source_0.set_time_source('external', 0)
         self.uhd_usrp_source_0.set_clock_source('internal', 0)
         self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(rx_freq, samp_rate/2), 0)
         self.uhd_usrp_source_0.set_gain(0, 0)
@@ -558,7 +558,7 @@ def argument_parser():
         "--interp", dest="interp", type=intx, default=1,
         help="Set interp [default=%(default)r]")
     parser.add_argument(
-        "--samp-rate", dest="samp_rate", type=eng_float, default="1.0M",
+        "--samp-rate", dest="samp_rate", type=eng_float, default="12.5M",
         help="Set samp_rate [default=%(default)r]")
     parser.add_argument(
         "--signal-type", dest="signal_type", type=str, default='JOVE',

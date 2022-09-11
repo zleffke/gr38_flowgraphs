@@ -39,9 +39,6 @@ from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import uhd
 import time
-import gr_sigmf
-import timing_utils
-import pmt
 
 from gnuradio import qtgui
 
@@ -176,83 +173,6 @@ class wwv_dual_record_sigmf(gr.top_block, Qt.QWidget):
         self.uhd_usrp_source_0.set_antenna('RX2', 1)
         self.uhd_usrp_source_0.set_samp_rate(samp_rate)
         self.uhd_usrp_source_0.set_time_unknown_pps(uhd.time_spec())
-        self.timing_utils_usrp_gps_time_sync_0 = timing_utils.usrp_gps_time_sync(self,'uhd_usrp_source_0')
-        self.timing_utils_system_time_tagger_0_0 = timing_utils.system_time_tagger_c(int(resamp_rate))
-        self.timing_utils_system_time_tagger_0 = timing_utils.system_time_tagger_c(int(resamp_rate))
-        self.timing_utils_system_time_diff_0_0 = timing_utils.system_time_diff_c(False,True)
-        self.timing_utils_system_time_diff_0 = timing_utils.system_time_diff_c(False,True)
-        self.sigmf_sink_1_0 = gr_sigmf.sink("cf32", fp_y, gr_sigmf.sigmf_time_mode_absolute, False)
-        self.sigmf_sink_1_0.set_global_meta("core:sample_rate", resamp_rate)
-        self.sigmf_sink_1_0.set_global_meta("core:description", 'WWV Dual Polarization Recorder')
-        self.sigmf_sink_1_0.set_global_meta("core:author", 'Zach Leffke, KJ4QLP')
-        self.sigmf_sink_1_0.set_global_meta("core:license", 'MIT')
-        self.sigmf_sink_1_0.set_global_meta("core:hw", 'N210, LFRX, KJ4QLP AHFDB Antenna')
-
-        self.sigmf_sink_1_0.set_global_meta("uhd:usrp_type", usrp_type)
-
-        self.sigmf_sink_1_0.set_global_meta("uhd:db_type", db_type)
-
-        self.sigmf_sink_1_0.set_global_meta("uhd:addr", usrp_addr)
-
-        self.sigmf_sink_1_0.set_global_meta("uhd:subdev_spec", usrp_subdev_spec)
-
-        self.sigmf_sink_1_0.set_global_meta("uhd:sync", usrp_sync)
-
-        self.sigmf_sink_1_0.set_global_meta("uhd:clock_source", usrp_clock_source)
-
-        self.sigmf_sink_1_0.set_global_meta("uhd:time_source", usrp_time_source)
-
-        self.sigmf_sink_1_0.set_global_meta("misc:signal_type", signal_type)
-
-        self.sigmf_sink_1_0.set_global_meta("ant:type", ant_type)
-
-        self.sigmf_sink_1_0.set_global_meta("ant:pol", ant_pol_y)
-
-        self.sigmf_sink_1_0.set_global_meta("geo:lat", "{:2.7f}".format(geo_lat))
-
-        self.sigmf_sink_1_0.set_global_meta("geo:lon", "{:2.7f}".format(geo_lon))
-
-        self.sigmf_sink_1_0.set_global_meta("geo:alt", "{:4.3f}".format(geo_alt))
-
-        self.sigmf_sink_1_0.set_global_meta("misc:interpolation", interp)
-
-        self.sigmf_sink_1_0.set_global_meta("misc:decimation", decim)
-        self.sigmf_sink_1 = gr_sigmf.sink("cf32", fp_x, gr_sigmf.sigmf_time_mode_absolute, False)
-        self.sigmf_sink_1.set_global_meta("core:sample_rate", resamp_rate)
-        self.sigmf_sink_1.set_global_meta("core:description", 'WWV Dual Polarization Recorder')
-        self.sigmf_sink_1.set_global_meta("core:author", 'Zach Leffke, KJ4QLP')
-        self.sigmf_sink_1.set_global_meta("core:license", 'MIT')
-        self.sigmf_sink_1.set_global_meta("core:hw", 'N210, LFRX, KJ4QLP AHFDB Antenna')
-
-        self.sigmf_sink_1.set_global_meta("uhd:usrp_type", usrp_type)
-
-        self.sigmf_sink_1.set_global_meta("uhd:db_type", db_type)
-
-        self.sigmf_sink_1.set_global_meta("uhd:addr", usrp_addr)
-
-        self.sigmf_sink_1.set_global_meta("uhd:subdev_spec", usrp_subdev_spec)
-
-        self.sigmf_sink_1.set_global_meta("uhd:sync", usrp_sync)
-
-        self.sigmf_sink_1.set_global_meta("uhd:clock_source", usrp_clock_source)
-
-        self.sigmf_sink_1.set_global_meta("uhd:time_source", usrp_time_source)
-
-        self.sigmf_sink_1.set_global_meta("misc:signal_type", signal_type)
-
-        self.sigmf_sink_1.set_global_meta("ant:type", ant_type)
-
-        self.sigmf_sink_1.set_global_meta("ant:pol", ant_pol_x)
-
-        self.sigmf_sink_1.set_global_meta("geo:lat", "{:2.7f}".format(geo_lat))
-
-        self.sigmf_sink_1.set_global_meta("geo:lon", "{:2.7f}".format(geo_lon))
-
-        self.sigmf_sink_1.set_global_meta("geo:alt", "{:4.3f}".format(geo_alt))
-
-        self.sigmf_sink_1.set_global_meta("misc:interpolation", interp)
-
-        self.sigmf_sink_1.set_global_meta("misc:decimation", decim)
         self.rational_resampler_xxx_0_0 = filter.rational_resampler_ccc(
                 interpolation=interp,
                 decimation=decim,
@@ -391,38 +311,6 @@ class wwv_dual_record_sigmf(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(0, 4):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self.qtgui_number_sink_0 = qtgui.number_sink(
-            gr.sizeof_float,
-            0,
-            qtgui.NUM_GRAPH_HORIZ,
-            2
-        )
-        self.qtgui_number_sink_0.set_update_time(0.10)
-        self.qtgui_number_sink_0.set_title("")
-
-        labels = ['', '', '', '', '',
-            '', '', '', '', '']
-        units = ['', '', '', '', '',
-            '', '', '', '', '']
-        colors = [("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"),
-            ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black")]
-        factor = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-
-        for i in range(2):
-            self.qtgui_number_sink_0.set_min(i, -1)
-            self.qtgui_number_sink_0.set_max(i, 1)
-            self.qtgui_number_sink_0.set_color(i, colors[i][0], colors[i][1])
-            if len(labels[i]) == 0:
-                self.qtgui_number_sink_0.set_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_number_sink_0.set_label(i, labels[i])
-            self.qtgui_number_sink_0.set_unit(i, units[i])
-            self.qtgui_number_sink_0.set_factor(i, factor[i])
-
-        self.qtgui_number_sink_0.enable_autoscale(False)
-        self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.pyqwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_number_sink_0_win)
         self.qtgui_freq_sink_x_0 = qtgui.freq_sink_c(
             2048, #size
             firdes.WIN_BLACKMAN_hARRIS, #wintype
@@ -485,32 +373,22 @@ class wwv_dual_record_sigmf(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(0, 4):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self.blocks_tag_debug_0 = blocks.tag_debug(gr.sizeof_gr_complex*1, '', "")
-        self.blocks_tag_debug_0.set_display(True)
-        self.blocks_socket_pdu_0 = blocks.socket_pdu('TCP_SERVER', '0.0.0.0', '52001', 10000, False)
-        self.blocks_message_debug_0 = blocks.message_debug()
+        self.blocks_tag_debug_0_0 = blocks.tag_debug(gr.sizeof_gr_complex*1, '', "")
+        self.blocks_tag_debug_0_0.set_display(True)
+        self.blocks_socket_pdu_0 = blocks.socket_pdu('UDP_SERVER', '0.0.0.0', '52001', 10000, False)
 
 
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.fosphor_qt_sink_c_0_0, 'freq'), (self.timing_utils_usrp_gps_time_sync_0, 'in'))
+        self.connect((self.rational_resampler_xxx_0, 0), (self.blocks_tag_debug_0_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.qtgui_freq_sink_x_0, 0))
+        self.connect((self.rational_resampler_xxx_0, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.qtgui_waterfall_sink_x_0, 0))
-        self.connect((self.rational_resampler_xxx_0, 0), (self.timing_utils_system_time_tagger_0_0, 0))
+        self.connect((self.rational_resampler_xxx_0_0, 0), (self.blocks_tag_debug_0_0, 1))
         self.connect((self.rational_resampler_xxx_0_0, 0), (self.qtgui_freq_sink_x_0, 1))
+        self.connect((self.rational_resampler_xxx_0_0, 0), (self.qtgui_time_sink_x_0, 1))
         self.connect((self.rational_resampler_xxx_0_0, 0), (self.qtgui_waterfall_sink_x_0_0, 0))
-        self.connect((self.rational_resampler_xxx_0_0, 0), (self.timing_utils_system_time_tagger_0, 0))
-        self.connect((self.timing_utils_system_time_diff_0, 0), (self.blocks_tag_debug_0, 0))
-        self.connect((self.timing_utils_system_time_diff_0, 1), (self.qtgui_number_sink_0, 0))
-        self.connect((self.timing_utils_system_time_diff_0, 0), (self.qtgui_time_sink_x_0, 0))
-        self.connect((self.timing_utils_system_time_diff_0, 0), (self.sigmf_sink_1, 0))
-        self.connect((self.timing_utils_system_time_diff_0_0, 0), (self.blocks_tag_debug_0, 1))
-        self.connect((self.timing_utils_system_time_diff_0_0, 1), (self.qtgui_number_sink_0, 1))
-        self.connect((self.timing_utils_system_time_diff_0_0, 0), (self.qtgui_time_sink_x_0, 1))
-        self.connect((self.timing_utils_system_time_diff_0_0, 0), (self.sigmf_sink_1_0, 0))
-        self.connect((self.timing_utils_system_time_tagger_0, 0), (self.timing_utils_system_time_diff_0_0, 0))
-        self.connect((self.timing_utils_system_time_tagger_0_0, 0), (self.timing_utils_system_time_diff_0, 0))
         self.connect((self.uhd_usrp_source_0, 0), (self.fosphor_qt_sink_c_0, 0))
         self.connect((self.uhd_usrp_source_0, 1), (self.fosphor_qt_sink_c_0_0, 0))
         self.connect((self.uhd_usrp_source_0, 0), (self.rational_resampler_xxx_0, 0))

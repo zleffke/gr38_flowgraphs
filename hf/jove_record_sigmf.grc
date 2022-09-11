@@ -623,7 +623,7 @@ blocks:
     label: ''
     short_id: ''
     type: eng_float
-    value: 1000e3
+    value: 12.5e6
   states:
     bus_sink: false
     bus_source: false
@@ -1200,7 +1200,7 @@ blocks:
     stream_args: ''
     stream_chans: '[]'
     sync: sync
-    time_source0: gpsdo
+    time_source0: external
     time_source1: ''
     time_source2: ''
     time_source3: ''
