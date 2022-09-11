@@ -82,6 +82,7 @@ class uhd_iridium_rx_1(gr.top_block, Qt.QWidget):
         self.decim = decim = 25
         self.rx_gain = rx_gain = 20
         self.ring_alert_label = ring_alert_label = "Ring Alert"
+        self.iridium_rx_1_addr = iridium_rx_1_addr = "addr=10.51.2.10"
         self.full_band_label = full_band_label = "Full Band"
         self.fc_iridium = fc_iridium = 1621.25e6
         self.f_ring_alert = f_ring_alert = 1626.270833e6
@@ -114,7 +115,7 @@ class uhd_iridium_rx_1(gr.top_block, Qt.QWidget):
         for c in range(4, 8):
             self.top_grid_layout.setColumnStretch(c, 1)
         self.uhd_usrp_source_0 = uhd.usrp_source(
-            ",".join(("addr=10.51.2.10", "")),
+            ",".join((iridium_rx_1_addr, "")),
             uhd.stream_args(
                 cpu_format="fc32",
                 args='',
@@ -230,6 +231,12 @@ class uhd_iridium_rx_1(gr.top_block, Qt.QWidget):
     def set_ring_alert_label(self, ring_alert_label):
         self.ring_alert_label = ring_alert_label
         Qt.QMetaObject.invokeMethod(self._ring_alert_label_label, "setText", Qt.Q_ARG("QString", self.ring_alert_label))
+
+    def get_iridium_rx_1_addr(self):
+        return self.iridium_rx_1_addr
+
+    def set_iridium_rx_1_addr(self, iridium_rx_1_addr):
+        self.iridium_rx_1_addr = iridium_rx_1_addr
 
     def get_full_band_label(self):
         return self.full_band_label

@@ -10,7 +10,7 @@ options:
     gen_linking: dynamic
     generate_options: qt_gui
     hier_block_src_path: '.:'
-    id: uhd_iridium_rx_1
+    id: gps_L1_mon_uhd_eth
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -32,21 +32,18 @@ options:
     state: enabled
 
 blocks:
-- name: bb_gain
-  id: variable_qtgui_entry
+- name: L1Hunt_addr
+  id: variable
   parameters:
     comment: ''
-    gui_hint: 4,4,1,4
-    label: ''
-    type: real
-    value: '20'
+    value: '"addr=10.41.1.13"'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [608, 356.0]
+    coordinate: [328, 76.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: bpf_taps_cc
   id: variable_band_pass_filter_taps
   parameters:
@@ -63,38 +60,26 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [360, 380.0]
+    coordinate: [536, 380.0]
     rotation: 0
     state: true
 - name: decim
   id: variable
   parameters:
     comment: ''
-    value: '25'
+    value: '125'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [528, 380.0]
+    coordinate: [776, 380.0]
     rotation: 0
     state: enabled
-- name: f_ring_alert
+- name: fc_gps_l1
   id: variable
   parameters:
     comment: ''
-    value: 1626.270833e6
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [280, 12.0]
-    rotation: 0
-    state: enabled
-- name: fc_iridium
-  id: variable
-  parameters:
-    comment: ''
-    value: 1621.25e6
+    value: 1575.42e6
   states:
     bus_sink: false
     bus_source: false
@@ -102,22 +87,49 @@ blocks:
     coordinate: [384, 12.0]
     rotation: 0
     state: enabled
+- name: fc_interferer
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: ''
+    type: real
+    value: -420e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [720, 484.0]
+    rotation: 0
+    state: true
 - name: full_band_label
   id: variable_qtgui_label
   parameters:
     comment: ''
     formatter: None
     gui_hint: 0,0,1,4
-    label: '"Iridium"'
+    label: '"GPS"'
     type: string
-    value: '"Full Band"'
+    value: '"L1 Full Band"'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [760, 188.0]
+    coordinate: [560, 116.0]
     rotation: 0
     state: true
+- name: interp
+  id: variable
+  parameters:
+    comment: ''
+    value: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [856, 380.0]
+    rotation: 0
+    state: enabled
 - name: iridium_rx_1_addr
   id: variable
   parameters:
@@ -130,20 +142,20 @@ blocks:
     coordinate: [184, 76.0]
     rotation: 0
     state: enabled
-- name: ring_alert_label
+- name: narrow_label
   id: variable_qtgui_label
   parameters:
     comment: ''
     formatter: None
     gui_hint: 0,4,1,4
-    label: '"Iridium"'
+    label: '"GPS"'
     type: string
-    value: '"Ring Alert"'
+    value: '"L1 - Narrow"'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [920, 188.0]
+    coordinate: [728, 116.0]
     rotation: 0
     state: true
 - name: rx_gain
@@ -153,7 +165,7 @@ blocks:
     gui_hint: 4,0,1,4
     label: ''
     type: real
-    value: '20'
+    value: '45'
   states:
     bus_sink: false
     bus_source: false
@@ -165,12 +177,24 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: 12.5e6
+    value: 5e6
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [184, 12]
+    coordinate: [184, 12.0]
+    rotation: 0
+    state: enabled
+- name: uhd_fc_tune
+  id: variable
+  parameters:
+    comment: ''
+    value: uhd.tune_request(fc_gps_l1, samp_rate/2)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 12.0]
     rotation: 0
     state: enabled
 - name: analog_agc2_xx_0
@@ -191,27 +215,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [360, 172.0]
+    coordinate: [312, 260.0]
     rotation: 0
     state: enabled
-- name: blocks_multiply_const_vxx_0
-  id: blocks_multiply_const_vxx
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    const: bb_gain
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    type: complex
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [608, 308.0]
-    rotation: 0
-    state: true
 - name: fosphor_qt_sink_c_0
   id: fosphor_qt_sink_c
   parameters:
@@ -228,26 +234,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [552, 196.0]
-    rotation: 0
-    state: true
-- name: fosphor_qt_sink_c_0_0
-  id: fosphor_qt_sink_c
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    freq_center: '0'
-    freq_span: samp_rate / decim
-    gui_hint: 1,4,3,4
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    wintype: firdes.WIN_BLACKMAN_hARRIS
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [784, 300.0]
+    coordinate: [520, 196.0]
     rotation: 0
     state: true
 - name: freq_xlating_fir_filter_xxx_0
@@ -255,9 +242,9 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    center_freq: f_ring_alert-fc_iridium
+    center_freq: fc_interferer
     comment: ''
-    decim: '25'
+    decim: decim
     maxoutbuf: '0'
     minoutbuf: '0'
     samp_rate: samp_rate
@@ -267,9 +254,170 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [360, 284.0]
+    coordinate: [536, 284.0]
     rotation: 0
     state: enabled
+- name: qtgui_freq_sink_x_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '0.2'
+    axislabels: 'True'
+    bw: samp_rate / decim * interp
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: fc_gps_l1 + fc_interferer
+    fftsize: '4096'
+    freqhalf: 'True'
+    grid: 'True'
+    gui_hint: 1,4,1,4
+    label: Relative Gain
+    label1: ''
+    label10: ''''''
+    label2: ''''''
+    label3: ''''''
+    label4: ''''''
+    label5: ''''''
+    label6: ''''''
+    label7: ''''''
+    label8: ''''''
+    label9: ''''''
+    legend: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '1'
+    showports: 'False'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.010'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1008, 220.0]
+    rotation: 0
+    state: true
+- name: qtgui_waterfall_sink_x_0
+  id: qtgui_waterfall_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    axislabels: 'True'
+    bw: samp_rate/decim*interp
+    color1: '0'
+    color10: '0'
+    color2: '0'
+    color3: '0'
+    color4: '0'
+    color5: '0'
+    color6: '0'
+    color7: '0'
+    color8: '0'
+    color9: '0'
+    comment: ''
+    fc: '0'
+    fftsize: '1024'
+    freqhalf: 'True'
+    grid: 'True'
+    gui_hint: 2,4,2,4
+    int_max: '10'
+    int_min: '-140'
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '1'
+    showports: 'False'
+    type: complex
+    update_time: '0.010'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1008, 324.0]
+    rotation: 0
+    state: true
+- name: rational_resampler_xxx_0
+  id: rational_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decim: '1'
+    fbw: ''
+    interp: interp
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    taps: ''
+    type: ccc
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [784, 284.0]
+    rotation: 0
+    state: true
 - name: uhd_usrp_source_0
   id: uhd_usrp_source
   parameters:
@@ -339,7 +487,7 @@ blocks:
     bw7: '0'
     bw8: '0'
     bw9: '0'
-    center_freq0: uhd.tune_request(fc_iridium, samp_rate/2)
+    center_freq0: uhd_fc_tune
     center_freq1: '0'
     center_freq10: '0'
     center_freq11: '0'
@@ -413,7 +561,7 @@ blocks:
     dc_offs_enb7: '""'
     dc_offs_enb8: '""'
     dc_offs_enb9: '""'
-    dev_addr: iridium_rx_1_addr
+    dev_addr: L1Hunt_addr
     dev_args: '""'
     gain0: rx_gain
     gain1: '0'
@@ -625,7 +773,7 @@ blocks:
     start_time: '-1.0'
     stream_args: ''
     stream_chans: '[]'
-    sync: sync
+    sync: pc_clock
     time_source0: external
     time_source1: ''
     time_source2: ''
@@ -645,10 +793,11 @@ blocks:
 
 connections:
 - [analog_agc2_xx_0, '0', fosphor_qt_sink_c_0, '0']
-- [blocks_multiply_const_vxx_0, '0', fosphor_qt_sink_c_0_0, '0']
-- [freq_xlating_fir_filter_xxx_0, '0', blocks_multiply_const_vxx_0, '0']
+- [analog_agc2_xx_0, '0', freq_xlating_fir_filter_xxx_0, '0']
+- [freq_xlating_fir_filter_xxx_0, '0', rational_resampler_xxx_0, '0']
+- [rational_resampler_xxx_0, '0', qtgui_freq_sink_x_0, '0']
+- [rational_resampler_xxx_0, '0', qtgui_waterfall_sink_x_0, '0']
 - [uhd_usrp_source_0, '0', analog_agc2_xx_0, '0']
-- [uhd_usrp_source_0, '0', freq_xlating_fir_filter_xxx_0, '0']
 
 metadata:
   file_format: 1
