@@ -1,0 +1,1885 @@
+options:
+  parameters:
+    author: Zach Leffke, KJ4QLP
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: VCC Burst TX/RX, 9600 Baud GMSK, AX.25
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: burst_rx_gmsk9600_ax25_playback
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: VCC Burst TX/RX, 9600 Baud GMSK, AX.25, w/ PTT
+    window_size: 1700,1700
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: chan_filt_cutoff
+  id: variable
+  parameters:
+    comment: ''
+    value: '24000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [888, 596.0]
+    rotation: 0
+    state: enabled
+- name: chan_filt_trans
+  id: variable
+  parameters:
+    comment: ''
+    value: '1000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [776, 596.0]
+    rotation: 0
+    state: enabled
+- name: chan_offset
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: main_tab@1:4,2,1,2
+    label: Chan Offset
+    type: real
+    value: -40e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 124]
+    rotation: 0
+    state: enabled
+- name: chan_samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: int(samp_rate / decim*interp / decim_2 * interp_2)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [72, 892.0]
+    rotation: 0
+    state: true
+- name: decim
+  id: variable
+  parameters:
+    comment: ''
+    value: int(samp_rate/2000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 12]
+    rotation: 0
+    state: enabled
+- name: decim_2
+  id: variable
+  parameters:
+    comment: ''
+    value: '2'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1160, 572.0]
+    rotation: 0
+    state: enabled
+- name: decim_taps
+  id: variable_low_pass_filter_taps
+  parameters:
+    beta: '6.76'
+    comment: ''
+    cutoff_freq: chan_cutoff
+    gain: '1.0'
+    samp_rate: chan_samp_rate
+    width: chan_trans_width
+    win: firdes.WIN_HAMMING
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1024, 980.0]
+    rotation: 0
+    state: true
+- name: fine_offset
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: ''
+    type: real
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [464, 516.0]
+    rotation: 0
+    state: enabled
+- name: fn
+  id: variable
+  parameters:
+    comment: ''
+    value: '"VCC_{:s}_{:s}".format(gs_id, ts_str)'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 76]
+    rotation: 0
+    state: enabled
+- name: fp
+  id: variable
+  parameters:
+    comment: ''
+    value: '"/vtgs/captures/vcc/{:s}".format(fn)'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 140]
+    rotation: 0
+    state: enabled
+- name: fsk_dev
+  id: variable
+  parameters:
+    comment: ''
+    value: '10000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [928, 1836.0]
+    rotation: 0
+    state: enabled
+- name: gs_id
+  id: variable
+  parameters:
+    comment: ''
+    value: '"VTGS"'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [440, 60]
+    rotation: 0
+    state: enabled
+- name: interp
+  id: variable
+  parameters:
+    comment: ''
+    value: '48'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 12]
+    rotation: 0
+    state: enabled
+- name: interp_2
+  id: variable
+  parameters:
+    comment: ''
+    value: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1240, 572.0]
+    rotation: 0
+    state: enabled
+- name: rate_factor
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: 2,0,1,8
+    label: ''
+    type: real
+    value: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [296, 76]
+    rotation: 0
+    state: enabled
+- name: rx_freq
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: main_tab@0:4,0,1,2
+    label: RX Freq
+    type: real
+    value: 401.08e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [144, 124]
+    rotation: 0
+    state: enabled
+- name: rx_gain
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: main_tab@0:4,2,1,2
+    label: RX Gain
+    type: real
+    value: '20'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [408, 124]
+    rotation: 0
+    state: enabled
+- name: rx_offset
+  id: variable
+  parameters:
+    comment: ''
+    value: samp_rate/2.0
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [296, 140]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: float(250e3)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+- name: trigger_thresh
+  id: variable_qtgui_entry
+  parameters:
+    comment: ''
+    gui_hint: main_tab@1:4,0,1,2
+    label: Trigger Thresh
+    type: real
+    value: '15'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 1076.0]
+    rotation: 0
+    state: enabled
+- name: ts_str
+  id: variable
+  parameters:
+    comment: ''
+    value: dt.strftime(dt.utcnow(), "%Y%m%d_%H%M%S" )
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [584, 12]
+    rotation: 0
+    state: enabled
+- name: analog_agc2_xx_0
+  id: analog_agc2_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    attack_rate: '10'
+    comment: automatic gain control
+    decay_rate: 1e-1
+    gain: '1'
+    max_gain: 65536 / 10
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    reference: 65536 / 10
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [640, 380.0]
+    rotation: 0
+    state: enabled
+- name: analog_const_source_x_0
+  id: analog_const_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: trigger_thresh
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [64, 996.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1'
+    comment: Channel Offset
+    freq: -1 * chan_offset
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [80, 388.0]
+    rotation: 0
+    state: enabled
+- name: analog_sig_source_x_0_0_0
+  id: analog_sig_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    amp: '1'
+    comment: VT Freq Offset
+    freq: -1 * fine_offset
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    phase: '0'
+    samp_rate: samp_rate *interp /decim
+    type: complex
+    waveform: analog.GR_COS_WAVE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 508.0]
+    rotation: 0
+    state: enabled
+- name: ax25_gmsk_rx_hier_0
+  id: ax25_gmsk_rx_hier
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    lpf_cutoff: 12.5e3
+    lpf_trans: 1e3
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_rate: '250000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [448, 1296.0]
+    rotation: 0
+    state: disabled
+- name: blocks_burst_tagger_0
+  id: blocks_burst_tagger
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    false_key: burst_stop
+    false_value: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    true_key: burst_start
+    true_value: 'True'
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [344, 1180.0]
+    rotation: 0
+    state: true
+- name: blocks_float_to_short_0
+  id: blocks_float_to_short
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: '1'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [168, 1220.0]
+    rotation: 0
+    state: true
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1064, 648.0]
+    rotation: 0
+    state: true
+- name: blocks_multiply_xx_0_0
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Center Channel
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [328, 400.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_xx_0_0_0
+  id: blocks_multiply_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: Center VCC-Ceres
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1048, 472.0]
+    rotation: 0
+    state: enabled
+- name: blocks_pdu_to_tagged_stream_0
+  id: blocks_pdu_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: baud*samps_per_symb*2
+    tag: est_len
+    type: complex
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 1324.0]
+    rotation: 0
+    state: disabled
+- name: blocks_socket_pdu_0_2
+  id: blocks_socket_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: 'Expects KISS Frames on input
+
+      Sends KISS Frames on output
+
+      <FEND><CMD><DATA><FEND>
+
+      DATA = AX.25 Frame'
+    host: 0.0.0.0
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    mtu: '1024'
+    port: '8000'
+    tcp_no_delay: 'False'
+    type: TCP_SERVER
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1136, 16]
+    rotation: 0
+    state: disabled
+- name: blocks_tag_debug_0
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '""'
+    name: ''
+    num_inputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 652.0]
+    rotation: 0
+    state: true
+- name: blocks_throttle_0
+  id: blocks_throttle
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate*rate_factor
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [328, 268]
+    rotation: 0
+    state: enabled
+- name: burst_rx_es_hier_0
+  id: burst_rx_es_hier
+  parameters:
+    affinity: ''
+    alias: ''
+    avg_len: '100'
+    baud: '9600'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_rate: samp_rate/decim*interp
+    samps_per_symb: '10'
+    trigger_thresh: trigger_thresh
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [392, 1744.0]
+    rotation: 0
+    state: disabled
+- name: burst_width
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: Burst Width [Hz]
+    short_id: ''
+    type: intx
+    value: int(20e3)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [264, 604.0]
+    rotation: 0
+    state: enabled
+- name: chan_cutoff
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: Channel Cutoff
+    short_id: ''
+    type: eng_float
+    value: 12e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1408, 636.0]
+    rotation: 0
+    state: enabled
+- name: chan_trans_width
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: Channel Trans. Width [cycles/samp]
+    short_id: ''
+    type: eng_float
+    value: 1e3
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1384, 732.0]
+    rotation: 0
+    state: enabled
+- name: fft_size
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: FFT Size
+    short_id: ''
+    type: intx
+    value: int(512)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [104, 604.0]
+    rotation: 0
+    state: enabled
+- name: fhss_utils_cf_estimate_0
+  id: fhss_utils_cf_estimate
+  parameters:
+    affinity: ''
+    alias: ''
+    channel_freqs: '[]'
+    comment: ''
+    maxoutbuf: '0'
+    method: fhss_utils.HALF_POWER
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [792, 776.0]
+    rotation: 0
+    state: true
+- name: fhss_utils_fft_burst_tagger_0
+  id: fhss_utils_fft_burst_tagger
+  parameters:
+    affinity: ''
+    alias: ''
+    burst_post_len: int(round((float(chan_samp_rate)/fft_size)*post_burst_time))
+    burst_pre_len: int(round((float(chan_samp_rate)/fft_size)*pre_burst_time))
+    burst_width: burst_width
+    center_frequency: rx_freq + chan_offset
+    comment: ''
+    debug: 'True'
+    fft_size: fft_size
+    history_size: int(round((float(samp_rate)/fft_size)*hist_time))
+    lookahead: int(round((float(samp_rate)/fft_size)*lookahead_time))
+    max_burst_len: '0'
+    max_bursts: '0'
+    maxoutbuf: '0'
+    minoutbuf: 2048*1000
+    sample_rate: int(samp_rate / decim*interp / decim_2 * interp_2)
+    threshold: trigger_thresh
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [264, 700.0]
+    rotation: 0
+    state: enabled
+- name: fhss_utils_tagged_burst_to_pdu_0
+  id: fhss_utils_tagged_burst_to_pdu
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decimation: '1'
+    max_burst_time: max_burst_time
+    maxoutbuf: '0'
+    min_burst_time: min_burst_time
+    minoutbuf: '0'
+    relative_center_frequency: '0.0'
+    relative_sample_rate: '1.0'
+    relative_span: '1.0'
+    sample_rate: chan_samp_rate
+    taps: decim_taps
+    threads: '3'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [520, 732.0]
+    rotation: 0
+    state: enabled
+- name: fsk_burst_detector_0
+  id: fsk_burst_detector
+  parameters:
+    affinity: ''
+    alias: ''
+    avg_len: '100'
+    comment: ''
+    cons_offset: '3'
+    decim: decim
+    fsk_dev: fsk_dev
+    interp: interp
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_rate: samp_rate
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [48, 968.0]
+    rotation: 0
+    state: enabled
+- name: gmsk_ax25_rx_hier_0
+  id: gmsk_ax25_rx_hier
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    lpf_cutoff: 7.2e3
+    lpf_trans: 1e3
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    quad_demod_gain: (samp_rate/decim*interp/decim_2*interp_2)/(2*math.pi*fsk_dev/8.0)
+    samp_rate: '48000'
+    samps_per_symb: '5'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [832, 1736.0]
+    rotation: 0
+    state: disabled
+- name: hist_time
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: History Time [s]
+    short_id: ''
+    type: eng_float
+    value: '0.075'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [720, 980.0]
+    rotation: 0
+    state: enabled
+- name: import_0
+  id: import
+  parameters:
+    alias: ''
+    comment: ''
+    imports: from datetime import datetime as dt; import string; import math
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [440, 12]
+    rotation: 0
+    state: enabled
+- name: lookahead_time
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: Lookahead Time [s]
+    short_id: ''
+    type: eng_float
+    value: '0.01'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [720, 1076.0]
+    rotation: 0
+    state: enabled
+- name: low_pass_filter_0
+  id: low_pass_filter
+  parameters:
+    affinity: ''
+    alias: ''
+    beta: '6.76'
+    comment: 'Channel Filter
+
+      Wide enough for doppler spread'
+    cutoff_freq: chan_filt_cutoff
+    decim: '1'
+    gain: '1'
+    interp: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samp_rate: samp_rate / decim *interp
+    type: fir_filter_ccf
+    width: chan_filt_trans
+    win: firdes.WIN_HAMMING
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [840, 388.0]
+    rotation: 0
+    state: enabled
+- name: main_tab
+  id: qtgui_tab_widget
+  parameters:
+    alias: ''
+    comment: ''
+    gui_hint: 0,0,2,8
+    label0: Full Band
+    label1: RX Channel
+    label10: Tab 10
+    label11: Tab 11
+    label12: Tab 12
+    label13: Tab 13
+    label14: Tab 14
+    label15: Tab 15
+    label16: Tab 16
+    label17: Tab 17
+    label18: Tab 18
+    label19: Tab 19
+    label2: Burst
+    label3: Config
+    label4: Tab 4
+    label5: Tab 5
+    label6: Tab 6
+    label7: Tab 7
+    label8: Tab 8
+    label9: Tab 9
+    num_tabs: '3'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [792, 12]
+    rotation: 0
+    state: enabled
+- name: max_burst_time
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: Max Burst Time [s]
+    short_id: ''
+    type: eng_float
+    value: '0.25'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [872, 1076.0]
+    rotation: 0
+    state: enabled
+- name: min_burst_time
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: Min Burst Time [s]
+    short_id: ''
+    type: eng_float
+    value: '0.01'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [872, 980.0]
+    rotation: 0
+    state: enabled
+- name: pdu_utils_pdu_fine_time_measure_0
+  id: pdu_utils_pdu_fine_time_measure
+  parameters:
+    affinity: ''
+    alias: ''
+    average_width: '10'
+    buffer_percent: '15'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    post_burst_time: post_burst_time
+    pre_burst_time: pre_burst_time
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1064, 748.0]
+    rotation: 0
+    state: enabled
+- name: pdu_utils_pdu_split_0
+  id: pdu_utils_pdu_split
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    pass_empty: 'False'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 680.0]
+    rotation: 0
+    state: true
+- name: post_burst_time
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: Post Burst Time [s]
+    short_id: ''
+    type: eng_float
+    value: '0.5'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [568, 1076.0]
+    rotation: 0
+    state: enabled
+- name: pre_burst_time
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: Pre Burst Time [s]
+    short_id: ''
+    type: eng_float
+    value: '0.075'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [568, 980.0]
+    rotation: 0
+    state: enabled
+- name: pyqt_meta_text_output_0
+  id: pyqt_meta_text_output
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    gui_hint: main_tab@1:3,6,4,2
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [664, 1900.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_freq_sink_x_1
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate*interp/decim*interp_2/decim_2
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: '2048'
+    freqhalf: 'True'
+    grid: 'True'
+    gui_hint: main_tab@1:0,4,2,4
+    label: Relative Gain
+    label1: '''orig'''
+    label10: ''
+    label2: '''corr'''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Burst RX Spectrum"'
+    nconnections: '2'
+    showports: 'True'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+    ymax: '10'
+    ymin: '-140'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1072, 1656.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_freq_sink_x_1_0
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '1.0'
+    axislabels: 'True'
+    bw: samp_rate / decim*interp / decim_2 * interp_2
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: '0'
+    fftsize: '2048'
+    freqhalf: 'True'
+    grid: 'True'
+    gui_hint: main_tab@1:0,0,2,4
+    label: Relative Gain
+    label1: pre-d
+    label10: ''
+    label2: agc_filt
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Channel Spectrum"'
+    nconnections: '1'
+    showports: 'True'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.0010'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+    ymax: '50'
+    ymin: '-50'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1144, 256.0]
+    rotation: 180
+    state: enabled
+- name: qtgui_freq_sink_x_1_0_1
+  id: qtgui_freq_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    average: '0.2'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '"blue"'
+    color10: '"dark blue"'
+    color2: '"red"'
+    color3: '"green"'
+    color4: '"black"'
+    color5: '"cyan"'
+    color6: '"magenta"'
+    color7: '"yellow"'
+    color8: '"dark red"'
+    color9: '"dark green"'
+    comment: ''
+    ctrlpanel: 'False'
+    fc: rx_freq
+    fftsize: '2048'
+    freqhalf: 'True'
+    grid: 'True'
+    gui_hint: main_tab@0:0,0,1,8
+    label: Relative Gain
+    label1: pre-d
+    label10: ''
+    label2: agc_filt
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"VCC RX Spectrum"'
+    nconnections: '1'
+    showports: 'True'
+    tr_chan: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_tag: '""'
+    type: complex
+    units: dB
+    update_time: '0.0010'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+    ymax: '-60'
+    ymin: '-130'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 184.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_0
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: main_tab@2:2,4,1,4
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '"Threshold"'
+    nconnections: '2'
+    size: '1024'
+    srate: samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.010'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '10'
+    ymin: '-10'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [296, 956.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_time_sink_x_1
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'True'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: main_tab@2:0,4,2,4
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: '1024'
+    srate: chan_samp_rate
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0.005'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_TAG
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '"burst_start"'
+    type: complex
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [568, 1188.0]
+    rotation: 0
+    state: true
+- name: qtgui_waterfall_sink_x_0
+  id: qtgui_waterfall_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    axislabels: 'True'
+    bw: samp_rate
+    color1: '0'
+    color10: '0'
+    color2: '0'
+    color3: '0'
+    color4: '0'
+    color5: '0'
+    color6: '0'
+    color7: '0'
+    color8: '0'
+    color9: '0'
+    comment: ''
+    fc: rx_freq
+    fftsize: '2048'
+    freqhalf: 'True'
+    grid: 'True'
+    gui_hint: main_tab@0:1,0,1,8
+    int_max: '10'
+    int_min: '-140'
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '1'
+    showports: 'True'
+    type: complex
+    update_time: '0.0010'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [808, 288.0]
+    rotation: 0
+    state: enabled
+- name: qtgui_waterfall_sink_x_0_0
+  id: qtgui_waterfall_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    axislabels: 'True'
+    bw: samp_rate / decim*interp / decim_2 * interp_2
+    color1: '0'
+    color10: '0'
+    color2: '0'
+    color3: '0'
+    color4: '0'
+    color5: '0'
+    color6: '0'
+    color7: '0'
+    color8: '0'
+    color9: '0'
+    comment: ''
+    fc: '0'
+    fftsize: '2048'
+    freqhalf: 'True'
+    grid: 'True'
+    gui_hint: main_tab@1:2,0,2,4
+    int_max: '50'
+    int_min: '-50'
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '""'
+    nconnections: '1'
+    showports: 'True'
+    type: complex
+    update_time: '0.010'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1144, 360.0]
+    rotation: 180
+    state: enabled
+- name: qtgui_waterfall_sink_x_0_1
+  id: qtgui_waterfall_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    axislabels: 'True'
+    bw: chan_samp_rate
+    color1: '0'
+    color10: '0'
+    color2: '0'
+    color3: '0'
+    color4: '0'
+    color5: '0'
+    color6: '0'
+    color7: '0'
+    color8: '0'
+    color9: '0'
+    comment: ''
+    fc: '0'
+    fftsize: '128'
+    freqhalf: 'True'
+    grid: 'False'
+    gui_hint: main_tab@1:2,4,2,4
+    int_max: '10'
+    int_min: '-140'
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    legend: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    name: '"Burst Spectrogram"'
+    nconnections: '1'
+    showports: 'True'
+    type: msg_complex
+    update_time: '0.005'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1376, 824.0]
+    rotation: 0
+    state: enabled
+- name: rational_resampler_xxx_0
+  id: rational_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: reduce to 125k sample rate
+    decim: '2'
+    fbw: ''
+    interp: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    taps: ''
+    type: ccc
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [504, 244.0]
+    rotation: 0
+    state: enabled
+- name: rational_resampler_xxx_1
+  id: rational_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: reduce to 96k sample rate
+    decim: decim
+    fbw: ''
+    interp: interp
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    taps: ''
+    type: ccc
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [448, 388.0]
+    rotation: 0
+    state: enabled
+- name: rational_resampler_xxx_1_0
+  id: rational_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: reduce to 48k sample rate
+    decim: decim_2
+    fbw: ''
+    interp: interp_2
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    taps: ''
+    type: ccc
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1168, 460.0]
+    rotation: 0
+    state: enabled
+- name: rational_resampler_xxx_2
+  id: rational_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: reduce to 48k sample rate
+    decim: '2'
+    fbw: '0'
+    interp: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    taps: ''
+    type: ccc
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [648, 1636.0]
+    rotation: 0
+    state: disabled
+- name: rational_resampler_xxx_3
+  id: rational_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: reduce to 48k sample rate
+    decim: '2'
+    fbw: '0'
+    interp: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    taps: ''
+    type: ccc
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [648, 1748.0]
+    rotation: 0
+    state: disabled
+- name: sigmf_source_0
+  id: sigmf_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    filename: /home/zleffke/captures/VCC_VTGS_20191123_060818.sigmf-data
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'False'
+    type: fc32
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [80, 272]
+    rotation: 0
+    state: enabled
+- name: vcc_qt_hex_text_tx_0
+  id: vcc_qt_hex_text
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: rx ax.25 frames
+    gui_hint: main_tab@1:5,0,2,6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1096, 1804.0]
+    rotation: 0
+    state: disabled
+- name: virtual_sink_0
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: bursts
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1376, 924.0]
+    rotation: 0
+    state: disabled
+- name: virtual_sink_2
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: chan
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1392, 484.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_rx_kiss
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: rx_kiss
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1096, 1868.0]
+    rotation: 0
+    state: disabled
+- name: virtual_sink_tx_kiss
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: tx_kiss
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1304, 36]
+    rotation: 0
+    state: disabled
+- name: virtual_source_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: bursts
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [24, 1324.0]
+    rotation: 0
+    state: disabled
+- name: virtual_source_1_0
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: chan
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [80, 788.0]
+    rotation: 0
+    state: enabled
+- name: virtual_source_rx_kiss
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: rx_kiss
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [968, 36]
+    rotation: 0
+    state: disabled
+
+connections:
+- [analog_agc2_xx_0, '0', low_pass_filter_0, '0']
+- [analog_const_source_x_0, '0', qtgui_time_sink_x_0, '1']
+- [analog_sig_source_x_0_0, '0', blocks_multiply_xx_0_0, '1']
+- [analog_sig_source_x_0_0_0, '0', blocks_multiply_xx_0_0_0, '1']
+- [blocks_burst_tagger_0, '0', qtgui_time_sink_x_1, '0']
+- [blocks_float_to_short_0, '0', blocks_burst_tagger_0, '1']
+- [blocks_multiply_xx_0_0, '0', rational_resampler_xxx_1, '0']
+- [blocks_multiply_xx_0_0_0, '0', rational_resampler_xxx_1_0, '0']
+- [blocks_pdu_to_tagged_stream_0, '0', ax25_gmsk_rx_hier_0, '0']
+- [blocks_socket_pdu_0_2, pdus, virtual_sink_tx_kiss, '0']
+- [blocks_throttle_0, '0', blocks_multiply_xx_0_0, '0']
+- [blocks_throttle_0, '0', rational_resampler_xxx_0, '0']
+- [burst_rx_es_hier_0, '0', rational_resampler_xxx_3, '0']
+- [burst_rx_es_hier_0, '1', rational_resampler_xxx_2, '0']
+- [burst_rx_es_hier_0, meta, pyqt_meta_text_output_0, pdus]
+- [fhss_utils_cf_estimate_0, out, pdu_utils_pdu_fine_time_measure_0, pdu_in]
+- [fhss_utils_fft_burst_tagger_0, '0', blocks_tag_debug_0, '0']
+- [fhss_utils_fft_burst_tagger_0, '0', fhss_utils_tagged_burst_to_pdu_0, '0']
+- [fhss_utils_tagged_burst_to_pdu_0, cpdus, fhss_utils_cf_estimate_0, in]
+- [fhss_utils_tagged_burst_to_pdu_0, cpdus, pdu_utils_pdu_split_0, pdu_in]
+- [fsk_burst_detector_0, '0', blocks_float_to_short_0, '0']
+- [fsk_burst_detector_0, '0', qtgui_time_sink_x_0, '0']
+- [gmsk_ax25_rx_hier_0, '0', qtgui_freq_sink_x_1, '1']
+- [gmsk_ax25_rx_hier_0, kiss, vcc_qt_hex_text_tx_0, pdus]
+- [gmsk_ax25_rx_hier_0, kiss, virtual_sink_rx_kiss, '0']
+- [low_pass_filter_0, '0', blocks_multiply_xx_0_0_0, '0']
+- [pdu_utils_pdu_fine_time_measure_0, pdu_out, qtgui_waterfall_sink_x_0_1, in]
+- [pdu_utils_pdu_fine_time_measure_0, pdu_out, virtual_sink_0, '0']
+- [pdu_utils_pdu_split_0, dict, blocks_message_debug_0, print]
+- [rational_resampler_xxx_0, '0', qtgui_freq_sink_x_1_0_1, '0']
+- [rational_resampler_xxx_0, '0', qtgui_waterfall_sink_x_0, '0']
+- [rational_resampler_xxx_1, '0', analog_agc2_xx_0, '0']
+- [rational_resampler_xxx_1_0, '0', qtgui_freq_sink_x_1_0, '0']
+- [rational_resampler_xxx_1_0, '0', qtgui_waterfall_sink_x_0_0, '0']
+- [rational_resampler_xxx_1_0, '0', virtual_sink_2, '0']
+- [rational_resampler_xxx_2, '0', qtgui_freq_sink_x_1, '0']
+- [rational_resampler_xxx_3, '0', gmsk_ax25_rx_hier_0, '0']
+- [sigmf_source_0, '0', blocks_throttle_0, '0']
+- [virtual_source_0, '0', blocks_pdu_to_tagged_stream_0, pdus]
+- [virtual_source_1_0, '0', blocks_burst_tagger_0, '0']
+- [virtual_source_1_0, '0', fhss_utils_fft_burst_tagger_0, '0']
+- [virtual_source_1_0, '0', fsk_burst_detector_0, '0']
+- [virtual_source_rx_kiss, '0', blocks_socket_pdu_0_2, pdus]
+
+metadata:
+  file_format: 1

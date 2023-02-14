@@ -323,7 +323,7 @@ blocks:
     alias: ''
     comment: upsample to 250k for UHD
     decim: decim
-    fbw: '0'
+    fbw: ''
     interp: interp
     maxoutbuf: '0'
     minoutbuf: '0'

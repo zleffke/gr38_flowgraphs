@@ -330,7 +330,7 @@ blocks:
     alias: ''
     comment: reduce to 48k sample rate
     decim: decim
-    fbw: '0'
+    fbw: ''
     interp: interp
     maxoutbuf: '0'
     minoutbuf: '0'

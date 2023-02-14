@@ -7,7 +7,7 @@
 # GNU Radio Python Flow Graph
 # Title: GMSK, Ax.25, 9600, Streaming Mode
 # Author: Zach Leffke, KJ4QLP
-# Description: Half Duplex GMSK Ax.25 Transceiver, streaming processing
+# Description: Half Duplex GMSK Ax.25 Transceiver, streaming processing, TUN (layer3, IP) interface
 # GNU Radio version: 3.8.5.0-rc1
 
 from distutils.version import StrictVersion
@@ -40,15 +40,13 @@ import signal
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
-from gnuradio import uhd
-import time
 from gnuradio.qtgui import Range, RangeWidget
 
 from gnuradio import qtgui
 
-class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
+class gmsk_trx_uhd_tun(gr.top_block, Qt.QWidget):
 
-    def __init__(self, radio_id='30CF9D2', rf_freq=401.12e6, rx_offset=250e3, sat_name='CERES', tx_offset=250e3):
+    def __init__(self, radio_id='30CF9D2', radio_name='radio0', rf_freq=401.12e6, rx_offset=250e3, sat_name='CERES', tx_offset=250e3):
         gr.top_block.__init__(self, "GMSK, Ax.25, 9600, Streaming Mode")
         Qt.QWidget.__init__(self)
         self.setWindowTitle("GMSK, Ax.25, 9600, Streaming Mode")
@@ -69,7 +67,7 @@ class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("GNU Radio", "gmsk_trx_uhd")
+        self.settings = Qt.QSettings("GNU Radio", "gmsk_trx_uhd_tun")
 
         try:
             if StrictVersion(Qt.qVersion()) < StrictVersion("5.0.0"):
@@ -83,6 +81,7 @@ class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
         # Parameters
         ##################################################
         self.radio_id = radio_id
+        self.radio_name = radio_name
         self.rf_freq = rf_freq
         self.rx_offset = rx_offset
         self.sat_name = sat_name
@@ -94,10 +93,10 @@ class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
         self.ts_str = ts_str = dt.strftime(dt.utcnow(), "%Y-%m-%dT%H:%M:%S.%fZ" )
         self.samp_rate = samp_rate = float(250000)
         self.fn = fn = "{:s}_{:s}_{:s}_{:s}k.fc32".format(sat_name, radio_id, ts_str, str(int(samp_rate/1e3)))
-        self.tx_gain = tx_gain = 60
+        self.tx_gain = tx_gain = 0
         self.tx_correct = tx_correct = -300
-        self.rx_gain = rx_gain = 20
-        self.rx_correct = rx_correct = -826
+        self.rx_gain = rx_gain = 0
+        self.rx_correct = rx_correct = 0
         self.interp = interp = 24
         self.fp = fp = "/captures/{:s}".format(fn)
         self.decim = decim = int(samp_rate/2000)
@@ -106,7 +105,14 @@ class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
         ##################################################
         # Blocks
         ##################################################
-        self._tx_gain_range = Range(0, 86, 1, 60, 200)
+        self._bb_gain_range = Range(0, 1, .01, .75, 200)
+        self._bb_gain_win = RangeWidget(self._bb_gain_range, self.set_bb_gain, 'TX bb_gain', "counter_slider", float)
+        self.top_grid_layout.addWidget(self._bb_gain_win, 4, 10, 1, 2)
+        for r in range(4, 5):
+            self.top_grid_layout.setRowStretch(r, 1)
+        for c in range(10, 12):
+            self.top_grid_layout.setColumnStretch(c, 1)
+        self._tx_gain_range = Range(0, 86, 1, 0, 200)
         self._tx_gain_win = RangeWidget(self._tx_gain_range, self.set_tx_gain, 'TX Gain', "counter_slider", float)
         self.top_grid_layout.addWidget(self._tx_gain_win, 4, 8, 1, 2)
         for r in range(4, 5):
@@ -120,55 +126,21 @@ class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(8, 10):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self._rx_gain_range = Range(0, 86, 1, 20, 200)
+        self._rx_gain_range = Range(0, 86, 1, 0, 200)
         self._rx_gain_win = RangeWidget(self._rx_gain_range, self.set_rx_gain, 'RX Gain', "counter_slider", float)
         self.top_grid_layout.addWidget(self._rx_gain_win, 6, 0, 1, 2)
         for r in range(6, 7):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(0, 2):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self._rx_correct_range = Range(-10000, 10000, 1, -826, 200)
+        self._rx_correct_range = Range(-10000, 10000, 1, 0, 200)
         self._rx_correct_win = RangeWidget(self._rx_correct_range, self.set_rx_correct, 'rx_correct', "counter_slider", float)
         self.top_grid_layout.addWidget(self._rx_correct_win, 6, 2, 1, 2)
         for r in range(6, 7):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(2, 4):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self._bb_gain_range = Range(0, 1, .01, .75, 200)
-        self._bb_gain_win = RangeWidget(self._bb_gain_range, self.set_bb_gain, 'TX bb_gain', "counter_slider", float)
-        self.top_grid_layout.addWidget(self._bb_gain_win, 4, 10, 1, 2)
-        for r in range(4, 5):
-            self.top_grid_layout.setRowStretch(r, 1)
-        for c in range(10, 12):
-            self.top_grid_layout.setColumnStretch(c, 1)
-        self.uhd_usrp_source_0 = uhd.usrp_source(
-            ",".join(("", "")),
-            uhd.stream_args(
-                cpu_format="fc32",
-                args='',
-                channels=list(range(0,1)),
-            ),
-        )
-        self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(rf_freq+rx_correct, rx_offset), 0)
-        self.uhd_usrp_source_0.set_gain(rx_gain, 0)
-        self.uhd_usrp_source_0.set_antenna('TX/RX', 0)
-        self.uhd_usrp_source_0.set_samp_rate(samp_rate)
-        self.uhd_usrp_source_0.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
-        self.uhd_usrp_sink_0_0 = uhd.usrp_sink(
-            ",".join(("", "")),
-            uhd.stream_args(
-                cpu_format="fc32",
-                args='',
-                channels=list(range(0,1)),
-            ),
-            '',
-        )
-        self.uhd_usrp_sink_0_0.set_center_freq(uhd.tune_request(rf_freq+tx_correct, tx_offset), 0)
-        self.uhd_usrp_sink_0_0.set_gain(tx_gain, 0)
-        self.uhd_usrp_sink_0_0.set_antenna('TX/RX', 0)
-        self.uhd_usrp_sink_0_0.set_samp_rate(250e3)
-        self.uhd_usrp_sink_0_0.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
-        self.rational_resampler_xxx_1 = filter.rational_resampler_ccc(
+        self.rational_resampler_xxx_0 = filter.rational_resampler_ccc(
                 interpolation=interp,
                 decimation=decim,
                 taps=None,
@@ -300,7 +272,7 @@ class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(0, 8):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self.blocks_socket_pdu_0_2 = blocks.socket_pdu('TCP_SERVER', '0.0.0.0', '8000', 1024, False)
+        self.blocks_tuntap_pdu_0 = blocks.tuntap_pdu(radio_name, 10000, True)
         self.ax25_gmsk_tx_hier_0 = ax25_gmsk_tx_hier(
             bb_gain=0.75,
             bt=.5,
@@ -316,19 +288,18 @@ class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.ax25_gmsk_rx_hier_0, 'kiss/ax25'), (self.blocks_socket_pdu_0_2, 'pdus'))
-        self.msg_connect((self.blocks_socket_pdu_0_2, 'pdus'), (self.ax25_gmsk_tx_hier_0, 'kiss/ax25'))
+        self.msg_connect((self.ax25_gmsk_rx_hier_0, 'kiss/ax25'), (self.blocks_tuntap_pdu_0, 'pdus'))
+        self.msg_connect((self.blocks_tuntap_pdu_0, 'pdus'), (self.ax25_gmsk_tx_hier_0, 'kiss/ax25'))
         self.connect((self.ax25_gmsk_rx_hier_0, 0), (self.qtgui_freq_sink_x_1_0, 0))
         self.connect((self.ax25_gmsk_rx_hier_0, 1), (self.qtgui_freq_sink_x_1_0, 1))
         self.connect((self.ax25_gmsk_rx_hier_0, 1), (self.qtgui_waterfall_sink_x_0, 0))
-        self.connect((self.ax25_gmsk_tx_hier_0, 0), (self.rational_resampler_xxx_1, 0))
-        self.connect((self.ax25_gmsk_tx_hier_0, 0), (self.uhd_usrp_sink_0_0, 0))
-        self.connect((self.rational_resampler_xxx_1, 0), (self.qtgui_freq_sink_x_1_0_0, 0))
-        self.connect((self.uhd_usrp_source_0, 0), (self.ax25_gmsk_rx_hier_0, 0))
+        self.connect((self.ax25_gmsk_tx_hier_0, 0), (self.rational_resampler_xxx_0, 0))
+        self.connect((self.rational_resampler_xxx_0, 0), (self.ax25_gmsk_rx_hier_0, 0))
+        self.connect((self.rational_resampler_xxx_0, 0), (self.qtgui_freq_sink_x_1_0_0, 0))
 
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "gmsk_trx_uhd")
+        self.settings = Qt.QSettings("GNU Radio", "gmsk_trx_uhd_tun")
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
 
@@ -339,20 +310,23 @@ class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
         self.radio_id = radio_id
         self.set_fn("{:s}_{:s}_{:s}_{:s}k.fc32".format(self.sat_name, self.radio_id, self.ts_str, str(int(self.samp_rate/1e3))))
 
+    def get_radio_name(self):
+        return self.radio_name
+
+    def set_radio_name(self, radio_name):
+        self.radio_name = radio_name
+
     def get_rf_freq(self):
         return self.rf_freq
 
     def set_rf_freq(self, rf_freq):
         self.rf_freq = rf_freq
-        self.uhd_usrp_sink_0_0.set_center_freq(uhd.tune_request(self.rf_freq+self.tx_correct, self.tx_offset), 0)
-        self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(self.rf_freq+self.rx_correct, self.rx_offset), 0)
 
     def get_rx_offset(self):
         return self.rx_offset
 
     def set_rx_offset(self, rx_offset):
         self.rx_offset = rx_offset
-        self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(self.rf_freq+self.rx_correct, self.rx_offset), 0)
 
     def get_sat_name(self):
         return self.sat_name
@@ -366,7 +340,6 @@ class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
 
     def set_tx_offset(self, tx_offset):
         self.tx_offset = tx_offset
-        self.uhd_usrp_sink_0_0.set_center_freq(uhd.tune_request(self.rf_freq+self.tx_correct, self.tx_offset), 0)
 
     def get_ts_str(self):
         return self.ts_str
@@ -385,7 +358,6 @@ class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
         self.qtgui_freq_sink_x_1_0.set_frequency_range(0, self.samp_rate / self.decim*self.interp)
         self.qtgui_freq_sink_x_1_0_0.set_frequency_range(0, self.samp_rate/self.decim*self.interp)
         self.qtgui_waterfall_sink_x_0.set_frequency_range(0, self.samp_rate / self.decim*self.interp)
-        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
 
     def get_fn(self):
         return self.fn
@@ -399,28 +371,24 @@ class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
 
     def set_tx_gain(self, tx_gain):
         self.tx_gain = tx_gain
-        self.uhd_usrp_sink_0_0.set_gain(self.tx_gain, 0)
 
     def get_tx_correct(self):
         return self.tx_correct
 
     def set_tx_correct(self, tx_correct):
         self.tx_correct = tx_correct
-        self.uhd_usrp_sink_0_0.set_center_freq(uhd.tune_request(self.rf_freq+self.tx_correct, self.tx_offset), 0)
 
     def get_rx_gain(self):
         return self.rx_gain
 
     def set_rx_gain(self, rx_gain):
         self.rx_gain = rx_gain
-        self.uhd_usrp_source_0.set_gain(self.rx_gain, 0)
 
     def get_rx_correct(self):
         return self.rx_correct
 
     def set_rx_correct(self, rx_correct):
         self.rx_correct = rx_correct
-        self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(self.rf_freq+self.rx_correct, self.rx_offset), 0)
 
     def get_interp(self):
         return self.interp
@@ -456,11 +424,14 @@ class gmsk_trx_uhd(gr.top_block, Qt.QWidget):
 
 
 def argument_parser():
-    description = 'Half Duplex GMSK Ax.25 Transceiver, streaming processing'
+    description = 'Half Duplex GMSK Ax.25 Transceiver, streaming processing, TUN (layer3, IP) interface'
     parser = ArgumentParser(description=description)
     parser.add_argument(
         "--radio-id", dest="radio_id", type=str, default='30CF9D2',
         help="Set radio_id [default=%(default)r]")
+    parser.add_argument(
+        "--radio-name", dest="radio_name", type=str, default='radio0',
+        help="Set Radio Name [default=%(default)r]")
     parser.add_argument(
         "--rf-freq", dest="rf_freq", type=eng_float, default="401.12M",
         help="Set rf_freq [default=%(default)r]")
@@ -476,7 +447,7 @@ def argument_parser():
     return parser
 
 
-def main(top_block_cls=gmsk_trx_uhd, options=None):
+def main(top_block_cls=gmsk_trx_uhd_tun, options=None):
     if options is None:
         options = argument_parser().parse_args()
 
@@ -485,7 +456,7 @@ def main(top_block_cls=gmsk_trx_uhd, options=None):
         Qt.QApplication.setGraphicsSystem(style)
     qapp = Qt.QApplication(sys.argv)
 
-    tb = top_block_cls(radio_id=options.radio_id, rf_freq=options.rf_freq, rx_offset=options.rx_offset, sat_name=options.sat_name, tx_offset=options.tx_offset)
+    tb = top_block_cls(radio_id=options.radio_id, radio_name=options.radio_name, rf_freq=options.rf_freq, rx_offset=options.rx_offset, sat_name=options.sat_name, tx_offset=options.tx_offset)
 
     tb.start()
 

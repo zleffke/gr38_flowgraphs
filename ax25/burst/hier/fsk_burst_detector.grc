@@ -1,0 +1,315 @@
+options:
+  parameters:
+    author: ''
+    category: '[KJ4QLP Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: hb
+    hier_block_src_path: '.:'
+    id: fsk_burst_detector
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: FSK Burst Detector
+    window_size: 1250,300
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: analog_quadrature_demod_cf_1
+  id: analog_quadrature_demod_cf
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: 'FSK/GMSK
+
+      demodulator'
+    gain: (samp_rate/decim*interp)/(2*math.pi*fsk_dev/8.0)
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [160, 148]
+    rotation: 0
+    state: enabled
+- name: avg_len
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: Avg Length
+    short_id: ''
+    type: eng_float
+    value: '100.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [688, 8]
+    rotation: 0
+    state: enabled
+- name: blocks_abs_xx_0
+  id: blocks_abs_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [560, 168.0]
+    rotation: 0
+    state: enabled
+- name: blocks_add_const_vxx_0
+  id: blocks_add_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: cons_offset
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1000, 164.0]
+    rotation: 0
+    state: enabled
+- name: blocks_moving_average_xx_0
+  id: blocks_moving_average_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    length: int(avg_len)
+    max_iter: '4000'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    scale: 1.0/avg_len
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [648, 140.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_const_vxx_0
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: '-1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [832, 164.0]
+    rotation: 0
+    state: enabled
+- name: blocks_skiphead_0
+  id: blocks_skiphead
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: '1'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [304, 220.0]
+    rotation: 0
+    state: enabled
+- name: blocks_sub_xx_0
+  id: blocks_sub_xx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_inputs: '2'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [432, 152.0]
+    rotation: 0
+    state: enabled
+- name: cons_offset
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: Constant Offset
+    short_id: ''
+    type: eng_float
+    value: '3'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [800, 8]
+    rotation: 0
+    state: enabled
+- name: decim
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: Decimation
+    short_id: ''
+    type: intx
+    value: '125'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 8]
+    rotation: 0
+    state: enabled
+- name: fsk_dev
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: FSK Deviation
+    short_id: ''
+    type: eng_float
+    value: '10000.0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [560, 8]
+    rotation: 0
+    state: enabled
+- name: interp
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: Interpolation
+    short_id: ''
+    type: intx
+    value: '48'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [432, 8]
+    rotation: 0
+    state: enabled
+- name: pad_sink_0
+  id: pad_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: trigger
+    num_streams: '1'
+    optional: 'False'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1136, 164.0]
+    rotation: 0
+    state: enabled
+- name: pad_source_0
+  id: pad_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: in
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_streams: '1'
+    optional: 'False'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [16, 148]
+    rotation: 0
+    state: enabled
+- name: samp_rate
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: part
+    label: Sample Rate
+    short_id: ''
+    type: eng_float
+    value: '250000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [192, 8]
+    rotation: 0
+    state: enabled
+
+connections:
+- [analog_quadrature_demod_cf_1, '0', blocks_skiphead_0, '0']
+- [analog_quadrature_demod_cf_1, '0', blocks_sub_xx_0, '0']
+- [blocks_abs_xx_0, '0', blocks_moving_average_xx_0, '0']
+- [blocks_add_const_vxx_0, '0', pad_sink_0, '0']
+- [blocks_moving_average_xx_0, '0', blocks_multiply_const_vxx_0, '0']
+- [blocks_multiply_const_vxx_0, '0', blocks_add_const_vxx_0, '0']
+- [blocks_skiphead_0, '0', blocks_sub_xx_0, '1']
+- [blocks_sub_xx_0, '0', blocks_abs_xx_0, '0']
+- [pad_source_0, '0', analog_quadrature_demod_cf_1, '0']
+
+metadata:
+  file_format: 1
