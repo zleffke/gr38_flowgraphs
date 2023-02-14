@@ -117,7 +117,7 @@ blocks:
     bus_structure: null
     coordinate: [760, 188.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: iridium_rx_1_addr
   id: variable
   parameters:
@@ -212,6 +212,24 @@ blocks:
     coordinate: [608, 308.0]
     rotation: 0
     state: true
+- name: fosphor_glfw_sink_c_0
+  id: fosphor_glfw_sink_c
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    freq_center: '0'
+    freq_span: samp_rate
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [552, 132.0]
+    rotation: 0
+    state: enabled
 - name: fosphor_qt_sink_c_0
   id: fosphor_qt_sink_c
   parameters:
@@ -230,7 +248,7 @@ blocks:
     bus_structure: null
     coordinate: [552, 196.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: fosphor_qt_sink_c_0_0
   id: fosphor_qt_sink_c
   parameters:
@@ -239,7 +257,7 @@ blocks:
     comment: ''
     freq_center: '0'
     freq_span: samp_rate / decim
-    gui_hint: 1,4,3,4
+    gui_hint: 1,0,3,8
     maxoutbuf: '0'
     minoutbuf: '0'
     wintype: firdes.WIN_BLACKMAN_hARRIS
@@ -249,7 +267,7 @@ blocks:
     bus_structure: null
     coordinate: [784, 300.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: freq_xlating_fir_filter_xxx_0
   id: freq_xlating_fir_filter_xxx
   parameters:
@@ -644,6 +662,7 @@ blocks:
     state: true
 
 connections:
+- [analog_agc2_xx_0, '0', fosphor_glfw_sink_c_0, '0']
 - [analog_agc2_xx_0, '0', fosphor_qt_sink_c_0, '0']
 - [blocks_multiply_const_vxx_0, '0', fosphor_qt_sink_c_0_0, '0']
 - [freq_xlating_fir_filter_xxx_0, '0', blocks_multiply_const_vxx_0, '0']

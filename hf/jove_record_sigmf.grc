@@ -236,6 +236,24 @@ blocks:
     coordinate: [272, 132.0]
     rotation: 0
     state: enabled
+- name: fosphor_glfw_sink_c_0
+  id: fosphor_glfw_sink_c
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    freq_center: '0'
+    freq_span: samp_rate
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    wintype: firdes.WIN_BLACKMAN_hARRIS
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [360, 300.0]
+    rotation: 0
+    state: disabled
 - name: fosphor_qt_sink_c_0
   id: fosphor_qt_sink_c
   parameters:
@@ -1326,6 +1344,7 @@ connections:
 - [rational_resampler_xxx_0_0, '0', qtgui_freq_sink_x_0, '1']
 - [rational_resampler_xxx_0_0, '0', qtgui_waterfall_sink_x_0_0, '0']
 - [rational_resampler_xxx_0_0, '0', sigmf_sink_1_0, '0']
+- [uhd_usrp_source_0, '0', fosphor_glfw_sink_c_0, '0']
 - [uhd_usrp_source_0, '0', fosphor_qt_sink_c_0, '0']
 - [uhd_usrp_source_0, '0', rational_resampler_xxx_0, '0']
 - [uhd_usrp_source_0, '1', fosphor_qt_sink_c_0_0, '0']

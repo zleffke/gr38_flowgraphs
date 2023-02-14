@@ -83,7 +83,6 @@ class uhd_iridium_rx_1(gr.top_block, Qt.QWidget):
         self.rx_gain = rx_gain = 20
         self.ring_alert_label = ring_alert_label = "Ring Alert"
         self.iridium_rx_1_addr = iridium_rx_1_addr = "addr=10.51.2.10"
-        self.full_band_label = full_band_label = "Full Band"
         self.fc_iridium = fc_iridium = 1621.25e6
         self.f_ring_alert = f_ring_alert = 1626.270833e6
         self.bpf_taps_cc = bpf_taps_cc = firdes.complex_band_pass(1.0, samp_rate, -samp_rate/2/decim, samp_rate/2/decim, 500e3, firdes.WIN_HAMMING, 6.76)
@@ -144,40 +143,19 @@ class uhd_iridium_rx_1(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(4, 8):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self._full_band_label_tool_bar = Qt.QToolBar(self)
-
-        if None:
-            self._full_band_label_formatter = None
-        else:
-            self._full_band_label_formatter = lambda x: str(x)
-
-        self._full_band_label_tool_bar.addWidget(Qt.QLabel("Iridium" + ": "))
-        self._full_band_label_label = Qt.QLabel(str(self._full_band_label_formatter(self.full_band_label)))
-        self._full_band_label_tool_bar.addWidget(self._full_band_label_label)
-        self.top_grid_layout.addWidget(self._full_band_label_tool_bar, 0, 0, 1, 4)
-        for r in range(0, 1):
-            self.top_grid_layout.setRowStretch(r, 1)
-        for c in range(0, 4):
-            self.top_grid_layout.setColumnStretch(c, 1)
         self.freq_xlating_fir_filter_xxx_0 = filter.freq_xlating_fir_filter_ccc(25, bpf_taps_cc, f_ring_alert-fc_iridium, samp_rate)
         self.fosphor_qt_sink_c_0_0 = fosphor.qt_sink_c()
         self.fosphor_qt_sink_c_0_0.set_fft_window(firdes.WIN_BLACKMAN_hARRIS)
         self.fosphor_qt_sink_c_0_0.set_frequency_range(0, samp_rate / decim)
         self._fosphor_qt_sink_c_0_0_win = sip.wrapinstance(self.fosphor_qt_sink_c_0_0.pyqwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._fosphor_qt_sink_c_0_0_win, 1, 4, 3, 4)
+        self.top_grid_layout.addWidget(self._fosphor_qt_sink_c_0_0_win, 1, 0, 3, 8)
         for r in range(1, 4):
             self.top_grid_layout.setRowStretch(r, 1)
-        for c in range(4, 8):
+        for c in range(0, 8):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self.fosphor_qt_sink_c_0 = fosphor.qt_sink_c()
-        self.fosphor_qt_sink_c_0.set_fft_window(firdes.WIN_BLACKMAN_hARRIS)
-        self.fosphor_qt_sink_c_0.set_frequency_range(0, samp_rate)
-        self._fosphor_qt_sink_c_0_win = sip.wrapinstance(self.fosphor_qt_sink_c_0.pyqwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._fosphor_qt_sink_c_0_win, 1, 0, 3, 4)
-        for r in range(1, 4):
-            self.top_grid_layout.setRowStretch(r, 1)
-        for c in range(0, 4):
-            self.top_grid_layout.setColumnStretch(c, 1)
+        self.fosphor_glfw_sink_c_0 = fosphor.glfw_sink_c()
+        self.fosphor_glfw_sink_c_0.set_fft_window(firdes.WIN_BLACKMAN_hARRIS)
+        self.fosphor_glfw_sink_c_0.set_frequency_range(0, samp_rate)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_cc(bb_gain)
         self.analog_agc2_xx_0 = analog.agc2_cc(1e-1, 1e-2, 0.1, 1.0)
         self.analog_agc2_xx_0.set_max_gain(65536)
@@ -186,7 +164,7 @@ class uhd_iridium_rx_1(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.analog_agc2_xx_0, 0), (self.fosphor_qt_sink_c_0, 0))
+        self.connect((self.analog_agc2_xx_0, 0), (self.fosphor_glfw_sink_c_0, 0))
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.fosphor_qt_sink_c_0_0, 0))
         self.connect((self.freq_xlating_fir_filter_xxx_0, 0), (self.blocks_multiply_const_vxx_0, 0))
         self.connect((self.uhd_usrp_source_0, 0), (self.analog_agc2_xx_0, 0))
@@ -204,7 +182,7 @@ class uhd_iridium_rx_1(gr.top_block, Qt.QWidget):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.set_bpf_taps_cc(firdes.complex_band_pass(1.0, self.samp_rate, -self.samp_rate/2/self.decim, self.samp_rate/2/self.decim, 500e3, firdes.WIN_HAMMING, 6.76))
-        self.fosphor_qt_sink_c_0.set_frequency_range(0, self.samp_rate)
+        self.fosphor_glfw_sink_c_0.set_frequency_range(0, self.samp_rate)
         self.fosphor_qt_sink_c_0_0.set_frequency_range(0, self.samp_rate / self.decim)
         self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
         self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(self.fc_iridium, self.samp_rate/2), 0)
@@ -237,13 +215,6 @@ class uhd_iridium_rx_1(gr.top_block, Qt.QWidget):
 
     def set_iridium_rx_1_addr(self, iridium_rx_1_addr):
         self.iridium_rx_1_addr = iridium_rx_1_addr
-
-    def get_full_band_label(self):
-        return self.full_band_label
-
-    def set_full_band_label(self, full_band_label):
-        self.full_band_label = full_band_label
-        Qt.QMetaObject.invokeMethod(self._full_band_label_label, "setText", Qt.Q_ARG("QString", self.full_band_label))
 
     def get_fc_iridium(self):
         return self.fc_iridium
